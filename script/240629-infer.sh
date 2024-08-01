@@ -1,0 +1,1 @@
+python inference.py --loss_func mse --data_style 9
