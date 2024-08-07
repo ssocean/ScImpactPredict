@@ -20,13 +20,13 @@ import uuid
 import mysql.connector
 
 def filter_punctuation(title):
-    # 获取所有标点符号
+     
     punctuation = string.punctuation
 
-    # 创建一个翻译表，用于移除标点符号
+     
     translator = str.maketrans("", "", punctuation)
 
-    # 过滤标点符号
+     
     filtered_title = title.translate(translator)
 
     return filtered_title
@@ -170,7 +170,7 @@ class Arxiv_paper(Document):
 # print(a.authors)
 # def my_function(name,**kwargs):
 #     print(name)
-#     # 使用kwargs中的关键字参数
+ 
 #     for key, value in kwargs.items():
 #         print(key, value)
 # my_function(name='Alice', age=25, city='New York')

@@ -11,8 +11,8 @@ from deprecation import deprecated
 from langchain_core.exceptions import OutputParserException
 from langchain_core.utils.json import parse_json_markdown
 
-API_SECRET_KEY = "sk-zk2ea3df5fd097682a92420d3062d3a9b6b65aa2841d938e"
-BASE_URL = "https://flag.smarttrot.com/v1/"
+API_SECRET_KEY = "xxx"
+BASE_URL = "xxx"
 os.environ["OPENAI_API_KEY"] = API_SECRET_KEY
 os.environ["OPENAI_API_BASE"] = BASE_URL
 
@@ -22,7 +22,7 @@ from langchain.prompts import (
     PromptTemplate,
 )
 from langchain.agents import tool
-os.environ["SERPER_API_KEY"] = "4d2c4507e5814ca9a556c5879516076991863f99"
+os.environ["SERPER_API_KEY"] = "xxx"
 from langchain_community.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from pydantic import BaseModel, Field, validator
@@ -64,11 +64,9 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-os.environ["OPENAI_API_KEY"] = 'sk-zk26280ae8f5387fa2bfac15258d7adf6dc6628d7df983c9'
+os.environ["OPENAI_API_KEY"] = 'xxx'
 
-os.environ["OPENAI_API_BASE"] = "https://flag.smarttrot.com/v1/"
-
-# loader = TextLoader(r'C:\Users\Ocean\Desktop\PDF_Analysis\journal.txt', encoding='utf-8')
+os.environ["OPENAI_API_BASE"] = "xxx"
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownTextSplitter
 from retry import retry
 import re
@@ -122,7 +120,7 @@ from tqdm import tqdm
 
 
 def build_dataset():
-    engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/scitepredict')
+    engine = create_engine('xxxScImpactPredict')
     Base = declarative_base()
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -140,7 +138,7 @@ def build_dataset():
                 "abstract": paper_detail.abstract
             })
 
-    # 转换为 DataFrame 并保存为 CSV 文件
+     
     df = pd.DataFrame(data)
     df.to_csv('data_for_model.csv', index=False)
     session.close()
@@ -153,16 +151,16 @@ import pandas as pd
 import numpy as np
 
 def build_dataset_balanced():
-    engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/scitepredict')
+    engine = create_engine('xxxScImpactPredict')
     Base = declarative_base()
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # 定义 TNCSI 的分层区间
-    bins = np.linspace(0, 1, num=10)  # 生成 10 个区间，可以根据需要调整区间的数量
+     
+    bins = np.linspace(0, 1, num=10)   
     labels = range(len(bins) - 1)
 
-    # 查询每个区间的论文数量，并找出最小值
+     
     counts = []
     for i in labels:
         count = session.query(PaperMapping).filter(
@@ -172,7 +170,7 @@ def build_dataset_balanced():
         counts.append(count)
     min_count = min(counts)
 
-    # 对每个区间进行均匀抽样
+     
     data = []
     for i in labels:
         results = session.query(PaperMapping).filter(
@@ -190,9 +188,9 @@ def build_dataset_balanced():
                     "abstract": paper_detail.abstract
                 })
     print(len(data))
-    # 转换为 DataFrame 并保存为 CSV 文件
+     
     df = pd.DataFrame(data)
-    df.to_csv(r'C:\Users\Ocean\Documents\GitHub\ScitePredict\tools\data_for_model_balanced_2.csv', index=False)
+    df.to_csv(r'~\Documents\GitHub\ScImpactPredict\tools\data_for_model_balanced_2.csv', index=False)
     session.close()
 
 # build_dataset_balanced()

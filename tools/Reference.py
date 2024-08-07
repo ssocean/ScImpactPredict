@@ -10,27 +10,26 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import string
 
-PE = 'oceanytech@gmail.com'
-openai.api_base = "https://api.chatanywhere.com.cn/v1"
-openai.api_key = "sk-sI3KSj0olqhiMYkkTdx4N800TdW1NTWHUcbk1SOsQD4nTIbu"
+openai.api_base = "x"
+openai.api_key = "x"
 
 
 
 def filter_punctuation(title):
-    # 获取所有标点符号
+     
     punctuation = string.punctuation
 
-    # 创建一个翻译表，用于移除标点符号
+     
     translator = str.maketrans("", "", punctuation)
 
-    # 过滤标点符号
+     
     filtered_title = title.translate(translator)
 
     return filtered_title
 
 
 def get_paper_info_from_REST(paper_title, PE=PE):
-    # 使用Crossref API进行查询
+     
     '''
     data['message']['items'][0]['short-container-title'] 期刊名
     data['message']['items'][0]['DOI']
@@ -42,7 +41,7 @@ def get_paper_info_from_REST(paper_title, PE=PE):
     :return:
     '''
 
-    # 使用Crossref API进行查询
+     
     url = f'https://api.crossref.org/works?query.title={paper_title}&mailto={PE}'
     response = requests.get(url)
 
@@ -70,7 +69,7 @@ class Ref:
             self._arxiv_rst = None
             self._google_rst = None
             self._crossref_rst = None
-        else:  # 否则传入的是google scholar对象
+        else:   
             if ref_type.lower() == 'google':
                 self.ref_text = ref_obj['bib']['title'].lower()
                 self.ref_type = 'title'
@@ -211,8 +210,8 @@ class Ref:
             matched_paper = next(search.results())
 
             if matched_paper.title.lower().replace(" ", "") != self.title.lower().replace(" ", ""):
-                if self._google_rst:  # 如果有谷歌结果
-                    # 判断谷歌结果的url是否和arxiv一个
+                if self._google_rst:   
+                     
                     if not self._google_rst['pub_url'] == matched_paper.entry_id:
                         warnings.warn(
                             "Haven't fetch anything from arxiv. Please use google or corssref instead",
@@ -250,7 +249,7 @@ class Ref:
 
     @property
     def title(self):
-        if self._title is None:  # 如果没有，则判断是否只有标题，或是引用等
+        if self._title is None:   
             if self.ref_type == 'title':
                 self._title = self.ref_text.lower()
             elif self.ref_type == 'ref':
@@ -303,7 +302,7 @@ class Ref:
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            # prompt需要用英语替换，少占用token。
+             
             messages=messages,
         )
         result = ''

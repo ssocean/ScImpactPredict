@@ -56,27 +56,19 @@ def compute_metrics(eval_pred):
     
     
     return {"mse": mse, "mae": mae, "ndcg": ndcg}
-def main(args):
-    args.eff_gpus = int(torch.cuda.device_count())
-    args.eff_batch_size = args.eff_gpus * args.batch_size
-    
-    if args.learning_rate is None:  # only base_lr is specified
-        args.learning_rate = args.base_lr * args.eff_batch_size / 256
-    
-    
-    class TextDataset(Dataset):
-        def __init__(self, data, tokenizer, max_length=1024):
+class TextDataset(Dataset):
+        def __init__(self, data, tokenizer, max_length=1024,prompt_style=0):
             self.data = data
             self.tokenizer = tokenizer
             self.max_length = max_length
-
+            self.prompt_style = prompt_style
         def __len__(self):
             return len(self.data)
 
         def __getitem__(self, idx):
             row = self.data.iloc[idx]
             label = float(row['TNCSI_SP'])
-            if args.prompt_style == 1:
+            if self.prompt_style == 1:
                 text = f'''Given a certain paper, Title: {row['title']}\n Abstract: {row['abstract']}. \n Predict its normalized academic impact:'''
                 inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
                                         return_tensors="pt")
@@ -85,7 +77,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 0:
+            elif self.prompt_style == 0:
                 text = f'''Given a certain paper, Title: {row['title']}\n Abstract: {row['abstract']}. \n Predict its normalized academic impact (between 0 and 1):'''
                 inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
                                         return_tensors="pt")
@@ -94,7 +86,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == -3:
+            elif self.prompt_style == -3:
                 label = float(row['TNCSI'])
                 text = f'''Given a certain paper, Title: {row['title']}\n Abstract: {row['abstract']}. \n Predict its normalized academic impact (between 0 and 1):'''
                 inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
@@ -104,26 +96,8 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            # elif args.prompt_style == -1:
-            #     label = float(row['TNCSI'])
-            #     text = f'''Given a certain paper, Title: {row['title']}\n Abstract: {row['abstract']}. \n Predict its normalized academic impact (between 0 and 1):'''
-            #     inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
-            #                             return_tensors="pt")
-            #     return {
-            #         'input_ids': inputs['input_ids'].squeeze(0),
-            #         'attention_mask': inputs['attention_mask'].squeeze(0),
-            #         'labels': torch.tensor(label, dtype=torch.float)
-            #     }
-            # elif args.prompt_style == 10:
-            #     text = f'''Title: {row['title']}\n Abstract: {row['abstract']}. \n Predict its normalized academic impact (between 0 and 1):'''
-            #     inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
-            #                             return_tensors="pt")
-            #     return {
-            #         'input_ids': inputs['input_ids'].squeeze(0),
-            #         'attention_mask': inputs['attention_mask'].squeeze(0),
-            #         'labels': torch.tensor(label, dtype=torch.float)
-            #     }
-            elif args.prompt_style == 101:
+
+            elif self.prompt_style == 101:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -137,11 +111,6 @@ def main(args):
                     sota_statement = 'True'
                 else:
                     sota_statement = 'False'
-                # - State-of-the-Art Performance: {'Yes' if SOTA == 1 else 'No'}
-                # - Released a New Dataset: {'Yes' if new_dataset else 'No'}
-                # - Code Available Open Access: {'Yes' if OA else 'No'}
-                # - Reference Quality Metric: {RQM} (on a scale from lowest 0 to highest 1)
-
                 text = text = f"""
                 Given a certain paper, Title: {row['title']}\n Abstract: {row['abstract']}\n State-of-the-Art Performance: {'Yes' if SOTA == 1 else 'No'}. \n Predict its normalized academic impact (between 0 and 1):
                 """
@@ -156,7 +125,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 102:
+            elif self.prompt_style == 102:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -189,7 +158,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 103:
+            elif self.prompt_style == 103:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -222,7 +191,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 104:
+            elif self.prompt_style == 104:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -255,7 +224,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 105:
+            elif self.prompt_style == 105:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -288,7 +257,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }              
-            elif args.prompt_style == 2:
+            elif self.prompt_style == 2:
                 text = f'''Given the provided title and abstract, predict the future normalized academic impact on a scale from 0 (lowest impact) to 1 (highest impact). You may consider factors such as the language clarity, novelty of the research, or the claim of state-of-the-art, etc. Title: {row['title']}\n Abstract: {row['abstract']}'''
                 inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
                                         return_tensors="pt")
@@ -297,7 +266,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 3:
+            elif self.prompt_style == 3:
                 text = f'''Title: {row['title']}\n Abstract: {row['abstract']}'''
                 inputs = self.tokenizer(text, max_length=self.max_length, padding='max_length', truncation=True,
                                         return_tensors="pt")
@@ -306,7 +275,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 4:
+            elif self.prompt_style == 4:
                 is_practical = row['is_practical']
                 new_task = row['new_task']
                 new_dataset = row['new_dataset']
@@ -340,7 +309,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 5:
+            elif self.prompt_style == 5:
                 is_practical = row['is_practical']
                 new_task = row['new_task']
                 new_dataset = row['new_dataset']
@@ -374,7 +343,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 6:
+            elif self.prompt_style == 6:
                 is_practical = row['is_practical']
                 new_task = row['new_task']
                 new_dataset = row['new_dataset']
@@ -406,7 +375,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 7:
+            elif self.prompt_style == 7:
                 is_practical = row['is_practical']
                 new_task = row['new_task']
                 new_dataset = row['new_dataset']
@@ -445,7 +414,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 8:
+            elif self.prompt_style == 8:
                 is_practical = row['is_practical']
                 new_task = row['new_task']
                 new_dataset = row['new_dataset']
@@ -487,7 +456,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 9:
+            elif self.prompt_style == 9:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 is_broad = row['is_broad']
@@ -530,7 +499,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 91:
+            elif self.prompt_style == 91:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -563,7 +532,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 10:
+            elif self.prompt_style == 10:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 is_broad = row['is_broad']
@@ -609,7 +578,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 11:
+            elif self.prompt_style == 11:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -648,7 +617,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 12:
+            elif self.prompt_style == 12:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -689,7 +658,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 13:
+            elif self.prompt_style == 13:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -730,7 +699,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 14:
+            elif self.prompt_style == 14:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -768,7 +737,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 15:
+            elif self.prompt_style == 15:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -806,7 +775,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 16:
+            elif self.prompt_style == 16:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -845,7 +814,7 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }
-            elif args.prompt_style == 17:
+            elif self.prompt_style == 17:
                 new_dataset = row['new_dataset']
                 SOTA = row['SOTA']
                 OA = row['OA']
@@ -883,6 +852,14 @@ def main(args):
                     'attention_mask': inputs['attention_mask'].squeeze(0),
                     'labels': torch.tensor(label, dtype=torch.float)
                 }     
+def main(args):
+    args.eff_gpus = int(torch.cuda.device_count())
+    args.eff_batch_size = args.eff_gpus * args.batch_size
+    
+    if args.learning_rate is None:  # only base_lr is specified
+        args.learning_rate = args.base_lr * args.eff_batch_size / 256
+    
+    
     # Load your dataset
     df = pd.read_csv(args.data_path)
     df_test = pd.read_csv(args.test_data_path)
@@ -930,7 +907,7 @@ def main(args):
         model.print_trainable_parameters()
         
 
-    total_dataset = TextDataset(df, tokenizer, args.max_length)
+    total_dataset = TextDataset(df, tokenizer, args.max_length,args.prompt_style)
     total_size = len(total_dataset)
     train_size = int(0.9 * total_size)
     val_size = total_size - train_size
@@ -941,7 +918,7 @@ def main(args):
     if accelerator.is_local_main_process:
         default_tb_dir = datetime.now().strftime("%m-%d-%H-%M-%s")
         if args.runs_dir is None:
-            args.runs_dir = os.path.join('/home/u1120220285/ScitePredict/official_runs', default_tb_dir)
+            args.runs_dir = os.path.join('ScImpactPredict/official_runs', default_tb_dir)
         os.makedirs(args.runs_dir,exist_ok=True)
         json_file_path = os.path.join(args.runs_dir,'args.json')
         save_args_to_json(args, json_file_path)
@@ -967,7 +944,7 @@ def main(args):
         model=model,
         args=training_args,
         train_dataset=train_dataset,
-        eval_dataset=test_dataset,
+        eval_dataset=val_dataset,
         tokenizer=tokenizer,
         compute_metrics=compute_metrics
     )
@@ -988,9 +965,9 @@ def main(args):
         print(score_state_dict)
         torch.save(score_state_dict, os.path.join(model_last_id, 'score.pt'))
 def save_args_to_json(args, file_path):
-    # 将 args 对象转换为字典
+     
     args_dict = vars(args)
-    # 将字典保存到 JSON 文件
+     
     with open(file_path, 'w') as f:
         json.dump(args_dict, f, indent=4)
 def get_args():
@@ -1003,9 +980,9 @@ def get_args():
     parser.add_argument('--base_lr', type=float, default=5e-5, help='Base learning rate for the optimizer')
     parser.add_argument('--learning_rate', type=float, default=1e-4, help='Learning rate for the optimizer')
     parser.add_argument('--weight_decay', type=float, default=1e-2, help='Weight decay for the optimizer')
-    parser.add_argument('--data_path', type=str, default='/home/u1120220285/ScitePredict/NAID/NAID_train.csv', help='Path to the training dataset CSV file')
-    parser.add_argument('--test_data_path', type=str, default='/home/u1120220285/ScitePredict/NAID/NAID_test.csv', help='Path to the testing dataset CSV file')
-    parser.add_argument('--checkpoint', type=str, default='/home/u1120220285/llama3_weight', help='Model checkpoint path')
+    parser.add_argument('--data_path', type=str, default='ScImpactPredict/NAID/NAID_train.csv', help='Path to the training dataset CSV file')
+    parser.add_argument('--test_data_path', type=str, default='ScImpactPredict/NAID/NAID_test.csv', help='Path to the testing dataset CSV file')
+    parser.add_argument('--checkpoint', type=str, default='llama3_weight', help='Model checkpoint path')
     parser.add_argument('--loss_func', type=str, default='mse', choices=['bce', 'mse', 'l1','smoothl1','focalmse'], help='Loss function to use')
     parser.add_argument('--num_labels', type=int, default=1, help='Number of labels for sequence classification')
     parser.add_argument('--load_in_8bit', type=bool, default=True, help='Whether to load the model in 8-bit for efficiency')
@@ -1016,7 +993,7 @@ def get_args():
     parser.add_argument('--target_modules', type=str, default='q_proj,v_proj', help='Comma-separated list of transformer modules to apply LoRA')
     parser.add_argument('--warmup_ratio', type=float, default=0.1, help='Warmup ratio for learning rate scheduler')
     
-    parser.add_argument('--prompt_style', type=int, default=0, help='Warmup ratio for learning rate scheduler')
+    parser.add_argument('--prompt_style', type=int, default=0, )
     parser.add_argument('--data_augmentation', type=str, default='none', choices=['none', 'synonym'], help='Data augmentation technique to use')
 
 

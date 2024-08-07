@@ -25,13 +25,13 @@ Base = declarative_base()
 
 ref_cache = r'../CACHE/.refCache'
 
-# 创建数据库引擎
-engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/literaturedatabase')
+ 
+engine = create_engine('xxxliteraturedatabase')
 
-# 创建数据库表
+ 
 Base.metadata.create_all(engine)
 
-# 创建会话
+ 
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -61,10 +61,10 @@ def add_info_to_database(dir: str, session):
                     _ = cur_paper.entity
 
                     doc = PaperMapping(arxiv_paper=cur_paper)
-                    # ... 设置其他属性
-                    # 将对象添加到会话
+                     
+                     
                     session.add(doc)
-                    # 提交更改以将对象持久化到数据库
+                     
                     session.commit()
                 else:
                     print('done')
@@ -72,7 +72,7 @@ def add_info_to_database(dir: str, session):
             else:
                 print("No arXiv ID found.")
 
-    # 关闭会话
+     
     session.close()
 
 
@@ -94,9 +94,9 @@ def update_keyword(dir: str, session):
                 arxiv_id = '.'.join(title_parts[:2])
                 id = 'http://arxiv.org/abs/' + arxiv_id
 
-                # 创建会话工厂
+                 
 
-                # id_value = 1  # 指定的ID值
+                 
                 data = session.query(PaperMapping).filter(PaperMapping.id == id).first()
                 # print(data.idLiterature)
                 if data and data.gpt_keywords is None:
@@ -108,13 +108,13 @@ def update_keyword(dir: str, session):
                         print(data.title)
                         print(data.abstract)
                         return
-                    # print(','.join(kwd))  # 根据实际列名修改
+                     
                     # kwd=''
                     data.gpt_keywords = ','.join(kwd)
-                    # 提交更改
+                     
                     # print(','.join(kwd))
                     try:
-                        # 准备弃用google引用次数
+                         
                         if data.citation_count is None:
                             g_paper = Google_paper(data.title)
 
@@ -130,17 +130,17 @@ def update_keyword(dir: str, session):
                         return
                     #
                     session.commit()
-                    # print("数据更新成功")
+                     
                 else:
                     pass
-                    # print("未找到要更新的数据或该数据已存在无需更新")
-                # 输出查询结果
+                     
+                 
                 # for row in data:
 
-            # 关闭会话
+             
             session.close()
 
-    # 关闭会话
+     
     session.close()
 
 
@@ -153,12 +153,12 @@ def update_author(session):
     :param session:
     :return:
     '''
-    # 查询并遍历数据
+     
     results = session.query(PaperMapping).all()
     for row in results:
 
         authors_str = row.authors.replace("} {", "}, {")
-        # 提取"name"属性并组成列表
+         
         author_lst = []
         for item in json.loads("[" + authors_str + "]"):
             name = item.get("name")
@@ -185,7 +185,7 @@ def get_keywords():
     :param session:
     :return:
     '''
-    # 查询并遍历数据
+     
     results = session.query(PaperMapping).all()
     rst = []
     for row in tqdm(results):
@@ -305,12 +305,12 @@ def update_s2_ref(session):
     #     entity = entity['citedPaper']
     #     # start_time = time.time()
     #     s2paper = S2paper(entity,filled_authors=False,ref_type='entity')
-    #     # 记录结束时间
+     
     #
     #     # check_exist = session.query(RefMapping).filter(RefMapping.s2_id == s2paper.s2id).first()
     #     # end_time = time.time()
     #     # execution_time = end_time - start_time
-    #     # print("语句执行时间：", execution_time, "秒")
+     
     #     #
     #     # print(data.idLiterature)
     #
@@ -344,7 +344,7 @@ def update_s2_ref(session):
     #     else:
     #         # print('RoP Exist')
     #         pass
-    #         # 记录结束时间
+     
 
     # session.add(rop_data)
     # session.commit()
@@ -435,7 +435,7 @@ def insert_idLiterature_into_CoP(session):
                 session.add(cop_entry)
                 session.commit()
             except SQLAlchemyError as e:
-                # 处理SQLAlchemy异常
+                 
 
                 session.rollback()
                 row.valid = -1
@@ -483,20 +483,20 @@ def gpt_process(session):
 
 
 def sync_folder_to_database(session, dir=None):
-    # 第一步 可选 如果在下载文件时已注入，可以注释 (运行arxiv downloader)
+     
     # add_info_to_database(dir, session)
-    # 第二步 生成关键字 判断是否为PAMI综述
+     
     # gpt_process(session)
 
-    # 第三步 查询s2信息
+     
     print('查询s2信息')
     # update_s2(session, True)
     print('更新cite,ref信息')
-    # 第四步 更新cite,ref信息
+     
     # update_s2_ref(session)
     update_s2_citation(session)
 
-    # 第五步 可选 更新作者信息
+     
     # update_author(session)
 
 
@@ -504,17 +504,17 @@ def update_official_keywords(dir: str, session):
     import PyPDF2
     def extract_text_from_pdf(pdf_file_path):
         try:
-            # 打开PDF文件
+             
             with open(pdf_file_path, 'rb') as pdf_file:
-                # 创建PDF阅读器对象
+                 
                 pdf_reader = PyPDF2.PdfFileReader(pdf_file)
 
-                # 检查PDF是否有至少一页
+                 
                 if pdf_reader.numPages > 0:
-                    # 获取第一页
+                     
                     page = pdf_reader.getPage(0)
 
-                    # 提取第一页的文字内容
+                     
                     text = page.extractText()
 
                     return text
@@ -567,7 +567,7 @@ def update_official_keywords(dir: str, session):
             else:
                 print("No arXiv ID found.")
 
-    # 关闭会话
+     
     session.close()
 
 def update_gpt_keyword(session):

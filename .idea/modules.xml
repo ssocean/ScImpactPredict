@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ScitePredict.iml" filepath="$PROJECT_DIR$/.idea/ScitePredict.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ScImpactPredict.iml" filepath="$PROJECT_DIR$/.idea/ScImpactPredict.iml" />
     </modules>
   </component>
 </project>

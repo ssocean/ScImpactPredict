@@ -1,4 +1,4 @@
-# 导入所需的库
+ 
 from arxiv import arxiv, SortCriterion, SortOrder
 from jinja2 import Template
 
@@ -48,7 +48,7 @@ def simple_query_s2():
 
 
 
-# 定义论文标题和内容的列表
+ 
 rst = simple_query()
 papers = []
 for p in rst:
@@ -67,7 +67,7 @@ for p in rst:
     papers.append(dct)
 
 
-# 更新HTML模板和CSS样式
+ 
 html_template = """
 <!DOCTYPE html>
 <html>
@@ -149,10 +149,10 @@ html_template = """
 </html>
 """
 
-# 使用Jinja2渲染HTML模板
+ 
 template = Template(html_template)
 rendered_html = template.render(papers=papers)
 
-# 将生成的HTML保存到文件
+ 
 with open('generated_page.html', 'w') as file:
     file.write(rendered_html)

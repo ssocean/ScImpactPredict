@@ -45,3 +45,5 @@ results/*
 official_runs/*
 *.0
 official_runs*
+*.pt
+*.pth

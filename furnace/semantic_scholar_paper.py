@@ -424,7 +424,7 @@ class S2paper(Document):
 # print(sp.influential_citation_count)
 S2_PAPER_URL = "https://api.semanticscholar.org/v1/paper/"
 S2_QUERY_URL = "https://api.semanticscholar.org/graph/v1/paper/search/bulk"
-CACHE_FILE = r"C:\Users\Ocean\Documents\GitHub\Dynamic_Literature_Review\CACHE\.queryCache"
+CACHE_FILE = r"~\Documents\GitHub\Dynamic_Literature_Review\CACHE\.queryCache"
 
 
 
@@ -480,124 +480,7 @@ def relevance_query(query, pub_date: datetime = None):
             raise Exception(f"error while fetching {reply.url}: {msg}")
 
         return response
-# def request_query(query, offset=0, limit=1000,sort='publicationDate:desc',pub_date:datetime=None):
-#     '''
-#
-#     :param query:
-#     :param offset:
-#     :param limit:
-#     :param CACHE_FILE:
-#     :param sort: publicationDate:asc - return oldest papers first.
-#                 citationCount:desc - return most highly-cited papers first.
-#                 paperId - return papers in ID order, low-to-high.
-#     :param pub_date:
-#     2019-03-05 on March 3rd, 2019
-#     2019-03 during March 2019
-#     2019 during 2019
-#     2016-03-05:2020-06-06 as early as March 5th, 2016 or as late as June 6th, 2020
-#     1981-08-25: on or after August 25th, 1981
-#     :2015-01 before or on January 31st, 2015
-#     2015:2020 between January 1st, 2015 and December 31st, 2020
-#     :return:
-#     '''
-#     assert limit<=1000, 'According to S2, limit must smaller than 1000.'
-#     s2api = None
-#     params = urlencode(dict(query=query, offset=offset, limit=limit))
-#     url = (f"{S2_QUERY_URL}?{params}&fields=url,title,abstract,authors,venue,externalIds,referenceCount,"
-#            f"openAccessPdf,citationCount,influentialCitationCount,influentialCitationCount,fieldsOfStudy,"
-#            f"s2FieldsOfStudy,publicationTypes,publicationDate,publicationVenue&sort={sort}")
-#     with shelve.open(generate_cache_file_name(url)) as cache:
-#         if pub_date:
-#             url = url+f'$publicationDateOrYear=:{pub_date.year}-{pub_date.month}-{pub_date.day}'
-#         # print(url)
-#         if url in cache:
-#             reply = cache[url]
-#         else:
-#             session = requests.Session()
-#             if s2api is not None:
-#                 headers = {
-#                     'x-api-key': s2api
-#                 }
-#             else:
-#                 headers = None
-#             reply = session.get(url, headers=headers)
-#             cache[url] = reply
-#
-#             reply = session.get(url)
-#         response = reply.json()
-#         if "data" not in response:
-#             msg = response.get("error") or response.get("message") or "unknown"
-#             raise Exception(f"error while fetching {reply.url}: {msg}")
-#         return response
-#
-# #
-# def request_paper(key, cache, session, timeout=1):
-#     url = S2_PAPER_URL + quote_plus(key)
-#
-#     if url in cache:
-#         return cache[url]
-#
-#     try:
-#         sleep(timeout)
-#         data = session.get(url).json()
-#     except Exception as e:
-#         logging.warning(f"failed to retrieve {key}: {e}")
-#         return None
-#
-#     if "paperId" not in data:
-#         msg = data.get("error") or data.get("message") or "unknown error"
-#         logging.warning(f"failed to retrieve {key}: {msg}")
-#         return None
-#
-#     cache[url] = data
-#     return data
-# #
-# #
-# def fetch_semanticscholar(key: set, *, session=None):
-#     """Fetch SemanticScholar metadata for the given key. The key can be
-#     one of the following (see `API reference
-#     <https://www.semanticscholar.org/product/api>`_):
-#
-#     * DOI
-#     * S2 paper ID
-#     * ArXiv ID (example format: `arXiv:1705.10311`)
-#     * MAG ID (example format: `MAG:112218234`)
-#     * ACL ID (example format: `ACL:W12-3903`)
-#     * PubMed ID (example format: `PMID:19872477`)
-#     * Corpus ID (example format: `CorpusID:37220927`)
-#
-#     :param session: The `requests.Session` to use for HTTP requests.
-#     :returns: The `Document` if it was found and `None` otherwise.
-#     """
-#
-#     if key is None:
-#         return None
-#
-#     if session is None:
-#         session = requests.Session()
-#
-#     with shelve.open(CACHE_FILE) as cache:
-#         data = request_paper(key, cache, session)
-#
-#     if data is None:
-#         return None
-#     print(data)
-#     return data
-#
-# def query_semanticscholar(key: set, *, session=None):
-#     if key is None:
-#         return None
-#
-#     if session is None:
-#         session = requests.Session()
-#
-#     with shelve.open(CACHE_FILE) as cache:
-#         data = request_query(key, CACHE_FILE=cache, session)
-#
-#     if data is None:
-#         return None
-#     print(data)
-#     return data
+
 
 
 def request_query(query, sort_rule=None, pub_date: datetime = None, continue_token=None):
@@ -731,26 +614,26 @@ def get_s2citaions_per_month(title, total_num=2000):
                     missing_count += 1
                     continue
     # print(f'Missing count:{missing_count}')
-    # 将字典按照时间从最近到最远排序
+     
     # print(citation_count)
 
     sorted_data = OrderedDict(
         sorted(citation_count.items(), key=lambda x: datetime.strptime(x[0], "%Y.%m"), reverse=True))
     # print(f'{s2id} missing {missing_count} due to abnormal info.')
-    # 获取最近的月份和最远的月份
+     
     latest_month = datetime.now()#.strptime(s2paper.publication_date, "%Y.%m")# datetime.now().strftime("%Y.%m")
     earliest_month = s2paper.publication_date#.strftime("%Y.%m")#datetime.strptime(s2paper.publication_date, "%Y.%m")
 
-    # 创建包含所有月份的列表
+     
     all_months = [datetime.strftime(latest_month, "%Y.%#m")]
     while latest_month > earliest_month:
-        latest_month = latest_month.replace(day=1)  # 设置为月初
-        latest_month = latest_month - timedelta(days=1)  # 上一个月
+        latest_month = latest_month.replace(day=1)   
+        latest_month = latest_month - timedelta(days=1)   
         all_months.append(datetime.strftime(latest_month, "%Y.%#m"))
 
-    # 对缺失的月份进行补0
+     
     result = {month: sorted_data.get(month, 0) for month in all_months}
-    # 将字典按照时间从最近到最远排序
+     
     result = OrderedDict(sorted(result.items(), key=lambda x: datetime.strptime(x[0], "%Y.%m"), reverse=True))
     # print(dict(result))
     return result
@@ -783,17 +666,7 @@ def fit_topic_pdf(topic, topk=2000, show_img=False, save_img_pth=None):
 
     citation, _ = _plot_s2citaions(topic, total_num=1000)
     citation = np.array(citation)
-    # print(citation)
-    # 绘制直方图
-    # plt.hist(citation, bins=1000, density=False, alpha=0.7, color='skyblue')
-    # # 添加标题和标签
-    # plt.title('Distribution of Data')
-    # plt.xlabel('Value')
-    # plt.ylabel('Density')
-    # 显示图形
-    # plt.show()
 
-    # 拟合数据到指数分布
     try:
         params = stats.expon.fit(citation)
     except:
@@ -802,18 +675,18 @@ def fit_topic_pdf(topic, topk=2000, show_img=False, save_img_pth=None):
     loc, scale = params
     if len(citation)<=1:
         return None, None
-    # 生成拟合的指数分布曲线
+     
     x = np.linspace(np.min(citation), np.max(citation), 100)
     pdf = stats.expon.pdf(x, loc, scale)
 
-    # 绘制原始数据和拟合的指数分布曲线
+     
     if show_img or save_img_pth:
         plt.clf()
         plt.figure(figsize=(6, 4))
         plt.hist(citation, bins=1000, density=True, alpha=0.5)
         plt.plot(x, pdf, 'r', label='Fitted Exponential Distribution')
         plt.xlabel('Number of Citations')
-        # 设置 y 轴标签
+         
         plt.ylabel('Frequency')
         plt.legend()
         if save_img_pth:
@@ -945,15 +818,15 @@ def get_IEI(title, show_img=False, save_img_pth=None,exclude_last_n_month=1,norm
         rst['L6'] = float('-inf')
         rst['I6'] = float('-inf')
         return rst
-    # 六个坐标点
+     
     x = [i for i in range(actual_len)]
     subset = list(spms.items())[exclude_last_n_month:exclude_last_n_month+actual_len][::-1]
     y = [item[1] for item in subset]
     if normalized:
         y = [(y_i - min(y)) / (max(y) - min(y)) for y_i in y]
-    # 拟合五次贝塞尔曲线
+     
     t = np.linspace(0, 1, 100)
-    n = len(x) - 1  # 控制点的数量
+    n = len(x) - 1   
     curve_x = np.zeros_like(t)
     curve_y = np.zeros_like(t)
     # print(n,y)
@@ -962,7 +835,7 @@ def get_IEI(title, show_img=False, save_img_pth=None,exclude_last_n_month=1,norm
         curve_x += comb(n, i) * (1 - t) ** (n - i) * t ** i * x[i]
         curve_y += comb(n, i) * (1 - t) ** (n - i) * t ** i * y[i]
     if show_img or save_img_pth:
-        # 绘制曲线
+         
         plt.clf()
         fig = plt.figure(figsize=(6, 4), dpi=300)  # Increase DPI for high resolution
         plt.style.use('seaborn-v0_8')
@@ -1006,7 +879,7 @@ def get_IEI(title, show_img=False, save_img_pth=None,exclude_last_n_month=1,norm
 
 S2_PAPER_URL = "https://api.semanticscholar.org/v1/paper/"
 S2_QUERY_URL = "https://api.semanticscholar.org/graph/v1/paper/search/bulk"
-CACHE_FILE = r"C:\Users\Ocean\Documents\GitHub\Dynamic_Literature_Review\CACHE\.queryCache"
+CACHE_FILE = r"~\Documents\GitHub\Dynamic_Literature_Review\CACHE\.queryCache"
 
 
 from CACHE.CACHE_Config import generate_cache_file_name
@@ -1018,7 +891,7 @@ import shelve
 
 S2_PAPER_URL = "https://api.semanticscholar.org/v1/paper/"
 S2_QUERY_URL = "https://api.semanticscholar.org/graph/v1/paper/search/bulk"
-CACHE_FILE = r"C:\Users\Ocean\Documents\GitHub\Dynamic_Literature_Review\CACHE\.queryCache"
+CACHE_FILE = r"~\Documents\GitHub\Dynamic_Literature_Review\CACHE\.queryCache"
 @retry()
 def request_query(query,  sort_rule=None,  continue_token=None, early_date: datetime = None, later_date:datetime = None
                   ):# before_pub_date=True
@@ -1261,7 +1134,7 @@ def get_median_pubdate(pub_time,refs):
     # median_value = statistics.median(sorted_list)
     # months_difference = (pub_time - median_value) // datetime.timedelta(days=30)
     return median_value
-# 根据面积值选择冷色系或暖色系
+ 
 
 def plot_time_vs_aFNCSI(sp: S2paper, loc, scale):
     def create_cool_colors():
@@ -1279,10 +1152,10 @@ def plot_time_vs_aFNCSI(sp: S2paper, loc, scale):
     def sigmoid(x):
         return 1 / (1 + math.exp(-x))
 
-    # 创建冷色系
+     
     cool_cmap = create_cool_colors()
 
-    # 创建暖色系
+     
     warm_cmap = create_warm_colors()
     times = []
     aFNCSIs = []
@@ -1343,7 +1216,7 @@ def plot_time_vs_aFNCSI(sp: S2paper, loc, scale):
     plt.scatter(x, y, s=area, c=colors, alpha=0.5)
     plt.xlabel('Month Before Publication')
 
-    # 设置 y 轴标签
+     
     plt.ylabel('aTNCSI')
     plt.savefig(f'{sp.title}.svg')
 
@@ -1419,10 +1292,10 @@ def get_RQM(ref_obj, ref_type='entity', tncsi_rst=None,beta=20):
     #     except Exception as e:
     #         print(f"Error: {e}")
     #         del sorted_list[index]
-    # 计算前1/3处的索引位置
+     
     date_index = len(sorted_dates) // 2
 
-    # 取前1/3处的日期
+     
     index_date = sorted_dates[date_index]
 
     # timestamps = [d.timestamp() for d in sorted_list]

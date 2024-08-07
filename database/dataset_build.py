@@ -11,8 +11,8 @@ from deprecation import deprecated
 from langchain_core.exceptions import OutputParserException
 from langchain_core.utils.json import parse_json_markdown
 
-API_SECRET_KEY = "sk-zk2ea3df5fd097682a92420d3062d3a9b6b65aa2841d938e"
-BASE_URL = "https://flag.smarttrot.com/v1/"
+API_SECRET_KEY = "xxxx"
+BASE_URL = "x"
 os.environ["OPENAI_API_KEY"] = API_SECRET_KEY
 os.environ["OPENAI_API_BASE"] = BASE_URL
 
@@ -22,7 +22,6 @@ from langchain.prompts import (
     PromptTemplate,
 )
 from langchain.agents import tool
-os.environ["SERPER_API_KEY"] = "4d2c4507e5814ca9a556c5879516076991863f99"
 from langchain_community.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from pydantic import BaseModel, Field, validator
@@ -64,11 +63,9 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-os.environ["OPENAI_API_KEY"] = 'sk-zk26280ae8f5387fa2bfac15258d7adf6dc6628d7df983c9'
 
-os.environ["OPENAI_API_BASE"] = "https://flag.smarttrot.com/v1/"
 
-# loader = TextLoader(r'C:\Users\Ocean\Desktop\PDF_Analysis\journal.txt', encoding='utf-8')
+# loader = TextLoader(r'~\Desktop\PDF_Analysis\journal.txt', encoding='utf-8')
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownTextSplitter
 from retry import retry
 import re
@@ -119,7 +116,7 @@ def auto_make_directory(dir_pth: str):
     :param dir_pth: 路径
     :return: bool
     '''
-    if os.path.exists(dir_pth):  ##目录存在，返回为真
+    if os.path.exists(dir_pth):   
         return True
     else:
         os.makedirs(dir_pth)
@@ -130,7 +127,7 @@ def init_logger(out_pth: str = 'logs'):
     :param out_pth: 输出路径，默认为调用文件的同级目录logs
     :return: 日志类实例对象
     '''
-    # 日志模块
+     
     logger = logging.getLogger(__name__)
     logger.setLevel(level=logging.INFO)
     auto_make_directory(out_pth)
@@ -139,17 +136,17 @@ def init_logger(out_pth: str = 'logs'):
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s # %(message)s')
     handler.setFormatter(formatter)
-    # 输出到控制台
+     
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
-    # 输出到日志
+     
     logger.addHandler(handler)
     logger.addHandler(console)
     '''
     logger = init_logger(r'r')
-    logger.info("Start print log") #一般信息
-    logger.debug("Do something") #调试显示
-    logger.warning("Something maybe fail.")#警告
+    logger.info("Start print log")  
+    logger.debug("Do something")  
+    logger.warning("Something maybe fail.") 
     logger.info("'key':'value'")
     '''
     return logger
@@ -160,26 +157,26 @@ def retrieve_papers(query,target_date_former:datetime, target_date_latter:dateti
     if download_folder is not None:
         if not os.path.exists(download_folder) :
             os.makedirs(download_folder)
-    # 创建数据库引擎
-    engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/scitepredict')
+     
+    engine = create_engine('xxxScImpactPredict')
 
     Base = declarative_base()
-    # 创建数据库表
+     
     # Base.metadata.create_all(engine)
 
-    # 创建会话
+     
     Session = sessionmaker(bind=engine)
     session = Session()
-    # 获取当前日期并减去一天
+     
     # datetime_now_minus_one_day = datetime.datetime.now() - datetime.timedelta(days=1)
 
     # results = session.query(PaperMapping).all()
-    # 创建搜索对象
+     
     search = arxiv.Search(
         query=query,
         max_results=float('inf'),
-        sort_by=arxiv.SortCriterion.Relevance,  # 按提交时间排序
-        sort_order=arxiv.SortOrder.Descending,  # 从近到远
+        sort_by=arxiv.SortCriterion.Relevance,   
+        sort_order=arxiv.SortOrder.Descending,   
     )
     error_list = []
     for i, result in enumerate(search.results()):
@@ -226,7 +223,7 @@ def retrieve_papers(query,target_date_former:datetime, target_date_latter:dateti
                 #             time.sleep(8)
                 #             logger.warning(f'{result._get_default_filename()} download failed. Due to {e}')
                 #         except KeyboardInterrupt:
-                #             # 如果在检查文件存在性时按下中断
+                 
                 #             logger.info("Operation interrupted by user.")
                 #             if os.path.exists(os.path.join(download_folder, result._get_default_filename())):
                 #                 os.remove(os.path.join(download_folder, result._get_default_filename()))
@@ -245,14 +242,14 @@ def retrieve_papers(query,target_date_former:datetime, target_date_latter:dateti
 # retrieve_papers('all:cs.AI ANDNOT ti:"survey" ANDNOT ti:"review"',datetime.datetime(2021, 12, 31),datetime.datetime(2022, 12, 31) )
 
 def ensemble_meta_info():
-    # 创建数据库引擎
-    engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/scitepredict')
+     
+    engine = create_engine('xxxScImpactPredict')
 
     Base = declarative_base()
-    # 创建数据库表
+     
     Base.metadata.create_all(engine)
 
-    # 创建会话
+     
     Session = sessionmaker(bind=engine)
     session = Session()
     # results = session.query(PaperMapping).filter(PaperMapping.TNCSI == None and PaperMapping.gpt_keyword == None)#.all()#

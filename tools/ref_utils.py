@@ -22,7 +22,7 @@ import openai
 
 from tools.gpt_util import _get_ref_list
 
-# openai.api_base = "https://api.chatanywhere.com.cn/v1"
+
 openai.api_key = openai_key
 import math
 import re
@@ -33,7 +33,7 @@ from tqdm import tqdm
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-PE = 'oceanytech@gmail.com'  # polite Email
+PE = 'xxx'  # polite Email
 
 
 def get_avg_cite_num(query, year_low: int = None, year_high: int = None, topk=100, remove_k=None):
@@ -48,7 +48,7 @@ def get_avg_cite_num(query, year_low: int = None, year_high: int = None, topk=10
                         include_last_year: str = "abstracts",
                         start_index: int = 0
         '''
-        # 记录每篇论文的引用次数
+         
 
         for i, pub in tqdm(enumerate(search_query)):
             print(pub['bib']['title'])
@@ -93,11 +93,11 @@ def get_cited_by(search_pub):
 
 def extract_ref(pdf_pth):
     ref_keywords = ['Reference', 'Bibliograph', 'List of Reference', 'Reference List']
-    # 打开 PDF 文件
+     
     with open(pdf_pth, "rb") as f:
-        # 提取 PDF 文件中所有文本内容
+         
         text = extract_text(f)
-        # 查找指定章节的内容
+         
         for ref_keyword in ref_keywords:
             start = re.search(ref_keyword, text)
             if start:
@@ -197,7 +197,7 @@ def filter_arxiv(search, filter_keys='',
     filter_results = []
 
     print("filter_keys:", filter_keys)
-    # 确保每个关键词都能在摘要中找到，才算是目标论文
+     
     for index, result in enumerate(search.results()):
         abs_text = result.summary.replace('-\n', '-').replace('\n', ' ')
         meet_num = 0
@@ -258,7 +258,7 @@ from dateutil.relativedelta import relativedelta
 
 
 def get_next_month(year_month: str):
-    # 解析年月字符串
+     
     year, month = map(int, year_month.split('.'))
     date_obj = datetime(year, month, 1)
     next_month = date_obj + relativedelta(months=1)
@@ -335,7 +335,7 @@ def pub_number_histogram(ref_obj, output_pth=None):
     # time_freq.update({dict_key: time_freq.get(dict_key, 0) + 1})
 
     if output_pth:
-        # 创建一个DataFrame
+         
         search_pub_date = search_cite_paper.pub_date
         dates = get_year_month_list(search_pub_date)
         pub_nums = []
@@ -346,7 +346,7 @@ def pub_number_histogram(ref_obj, output_pth=None):
                 'Pub num': pub_nums}
         df = pd.DataFrame(data)
 
-        # 绘制柱状图
+         
         df.plot(x='Year', y='Pub num', kind='bar')
         plt.show()
     return time_freq
@@ -465,7 +465,7 @@ def fig2img(fig):
     '''
     fig.canvas.draw()
     w, h = fig.canvas.get_width_height()
-    # 将Image.frombytes替换为Image.frombuffer,图像会倒置
+     
     img = Image.frombytes('RGB', (w, h), fig.canvas.tostring_rgb())
     return img
 
@@ -595,26 +595,26 @@ def get_s2citaions_per_month(title, total_num=2000):
                     missing_count += 1
                     continue
     # print(f'Missing count:{missing_count}')
-    # 将字典按照时间从最近到最远排序
+     
     # print(citation_count)
 
     sorted_data = OrderedDict(
         sorted(citation_count.items(), key=lambda x: datetime.strptime(x[0], "%Y.%m"), reverse=True))
     # print(f'{s2id} missing {missing_count} due to abnormal info.')
-    # 获取最近的月份和最远的月份
+     
     latest_month = datetime.now()#.strptime(s2paper.publication_date, "%Y.%m")# datetime.now().strftime("%Y.%m")
     earliest_month = s2paper.publication_date#.strftime("%Y.%m")#datetime.strptime(s2paper.publication_date, "%Y.%m")
 
-    # 创建包含所有月份的列表
+     
     all_months = [datetime.strftime(latest_month, "%Y.%#m")]
     while latest_month > earliest_month:
-        latest_month = latest_month.replace(day=1)  # 设置为月初
-        latest_month = latest_month - timedelta(days=1)  # 上一个月
+        latest_month = latest_month.replace(day=1)   
+        latest_month = latest_month - timedelta(days=1)   
         all_months.append(datetime.strftime(latest_month, "%Y.%#m"))
 
-    # 对缺失的月份进行补0
+     
     result = {month: sorted_data.get(month, 0) for month in all_months}
-    # 将字典按照时间从最近到最远排序
+     
     result = OrderedDict(sorted(result.items(), key=lambda x: datetime.strptime(x[0], "%Y.%m"), reverse=True))
     # print(dict(result))
     return result
@@ -625,7 +625,7 @@ def stat_citation(citaitons_dict, observed_duration=6):
     data = []
     for spm in citaitons_dict.items():
         data.append(spm[1])
-    data = data[1:1 + observed_duration]  # 不计算当月的引用,并反向
+    data = data[1:1 + observed_duration]   
     data.reverse()
     # print(data)
     data = np.array(data)
@@ -633,27 +633,27 @@ def stat_citation(citaitons_dict, observed_duration=6):
     month = [i for i in range(1, 1 + observed_duration)]
     month = np.array(month)
 
-    # 将列表转换为 NumPy 数组
+     
     spearman_correlation, _ = spearmanr(list(month), list(data))
     pearson_correlation, _ = pearsonr(list(month), list(data))
 
-    # print("斯皮尔曼相关系数: ", correlation)
+     
     rst['spearman_correlation'] = spearman_correlation
     rst['pearson_correlation'] = pearson_correlation
-    # print("p值: ", p_value)
+     
 
-    # 计算差值矩阵
+     
     diff_matrix = np.subtract.outer(data, data)
     corr_matrix = np.corrcoef(month, data)
-    # 打印差值矩阵
+     
     # print(-diff_matrix)
     # print(corr_matrix)
 
     diff_matrix = -diff_matrix
-    # 提取主对角线上方的元素
+     
     upper_diagonal_elements = diff_matrix[np.triu_indices(diff_matrix.shape[0], k=1)]
 
-    # 计算均值和方差
+     
     dm_mean = np.mean(upper_diagonal_elements)
     dm_variance = np.var(upper_diagonal_elements)
     rst['dm_mean'] = dm_mean

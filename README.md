@@ -1,1 +1,1 @@
-# ScitePredict
+# ScImpactPredict
