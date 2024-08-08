@@ -1,11 +1,11 @@
 # From Words to Worth: Newborn Article Impact Prediction with LLM
 
 <p align="center">
-  <img src="img\model.png" alt="icon" width="25%">
+  <img src="img\model.png" alt="icon" width="100%">
 </p>
 
 <h1 align="center">
-  LLM Impact Predictor
+  LLM as Article Impact Predictor
 </h1>
 
 ### [Early Access Version]
@@ -61,3 +61,26 @@ class LlamaForSequenceClassification(LlamaPreTrainedModel):
                 loss_fct = nn.SmoothL1Loss()
         
 ```
+## Fine-tuning
+Prepare `train.sh` bash file like below:
+```
+DATA_PATH="ScImpactPredict/NAID/NAID_train_extrainfo.csv"
+TEST_DATA_PATH="ScImpactPredict/NAID/NAID_test_extrainfo.csv"
+
+OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
+    --total_epochs 5 \
+    --learning_rate 1e-4 \
+    --data_path $DATA_PATH \
+    --test_data_path $TEST_DATA_PATH \
+    --runs_dir ScImpactPredict/official_runs/LLAMA3 \
+    --checkpoint  path_to_huggingface_LLaMA3
+```
+Then, type `sh train.sh` in the console. Wating for the training ends~
+
+## Testing (batch)
+python inference.py \
+ --data_path ScImpactPredict/NAID/NAID_test_extrainfo.csv \
+ --weight_dir path_to_runs_dir
+
+## Testing (single article)
+Just modified the `single_pred.py` file, then type `python single_pred.py`.
