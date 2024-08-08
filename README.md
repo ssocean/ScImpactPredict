@@ -1,5 +1,6 @@
 # From Words to Worth: Newborn Article Impact Prediction with LLM
 
+
 <p align="center">
   <img src="img\model.png" alt="icon" width="65%">
 </p>
