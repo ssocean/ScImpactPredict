@@ -78,9 +78,22 @@ OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
 Then, type `sh train.sh` in the console. Wating for the training ends~
 
 ## Testing (batch)
+Similar to Fine-tuning, prepare `test.sh` as below:
+```
 python inference.py \
  --data_path ScImpactPredict/NAID/NAID_test_extrainfo.csv \
  --weight_dir path_to_runs_dir
+```
+Then, type `sh test.sh`.
 
 ## Testing (single article)
 Just modified the `single_pred.py` file, then type `python single_pred.py`.
+
+## Model Weights
+First, download the LLaMA-3 pretrain weights at huggingface official sites.
+Then, download the provided LoRA weights (runs_dir) [here](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing).
+
+## Compare with Previos Methods 
+With a few adjustments based on your specific needs, it should work fine. Since these models train very quickly (less than few minutes on a single RTX 3080), we won’t be providing the trained models.
+
+### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper.
