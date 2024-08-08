@@ -3,6 +3,12 @@ TEST_DATA_PATH="ScImpactPredict/NAID/NAID_test_extrainfo.csv"
 prompt=0
 
 
+OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
+    --total_epochs 5 \
+    --learning_rate 1e-4 \
+    --data_path $DATA_PATH \
+    --test_data_path $TEST_DATA_PATH \
+    --runs_dir ScImpactPredict/official_runs/mc_LLAMA3 \
 
 OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
     --total_epochs 5 \
@@ -36,5 +42,3 @@ OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
     --test_data_path $TEST_DATA_PATH \
     --runs_dir ScImpactPredict/official_runs/mc_qwen0-5b \
     --checkpoint qwen-0.5B/models--Qwen--Qwen2-0.5B/snapshots/ff3a49fac17555b8dfc4db6709f480cc8f16a9fe
-
-python scancel.py
