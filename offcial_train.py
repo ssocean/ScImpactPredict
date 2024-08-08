@@ -664,7 +664,6 @@ class TextDataset(Dataset):
                 OA = row['OA']
                 RQM = round(row['RQM'],1)
 
- 
                 dataset_statement = "This paper has released a new dataset." if new_dataset else "No new dataset has been released."
 
                 oa_statement = 'This paper has open-accessed the code framework.' if OA else "The code is not available."
