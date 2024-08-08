@@ -9,7 +9,7 @@
 </h1> -->
 
 ### [Early Access Version]
-###### This [paper](#) is currently under peer review. The code might change frequently. If you have any issues, feel free to reach out via Email: oceanytech@gmail.com or open an issue in the repository.
+###### This [paper](https://arxiv.org/abs/2408.03934?context=cs.CL) is currently under peer review. The code might change frequently. If you have any issues, feel free to reach out via Email: oceanytech@gmail.com or open an issue in the repository.
 
 ## Introduction
 
