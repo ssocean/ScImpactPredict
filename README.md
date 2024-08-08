@@ -96,4 +96,4 @@ Then, download the provided LoRA weights (runs_dir) [here](https://drive.google.
 ## Compare with Previos Methods 
 With a few adjustments based on your specific needs, it should work fine. Since these models train very quickly (less than few minutes on a single RTX 3080), we won’t be providing the trained models.
 
-### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper.
+### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper within acceptable margin.
