@@ -33,5 +33,4 @@ OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
     --prompt_style 4 \
     --runs_dir ScImpactPredict/official_runs/0720-prompt4_ep10
 
-
 python scancel.py
