@@ -18,7 +18,7 @@
 This repository contains the official implementation for the paper **"From Words to Worth: Newborn Article Impact Prediction with LLM"**. The tool is designed to PEFT the LLMs for the prediction of the future impact.
 
 ## Installation
-At this Early Access stage，installation could be a little bit complicated.
+At this Early Access stage，installation could be a little bit complicated. Sorry for any inconvenience.
 
 First, you need pull the repo and type following commands in the console:
 ```
@@ -90,7 +90,7 @@ Then, type `sh test.sh`.
 Just modified the `single_pred.py` file, then type `python single_pred.py`.
 
 ## Model Weights
-First, download the LLaMA-3 pretrain weights at huggingface official sites.
+First, apply and download the LLaMA-3 pretrain [weights](https://huggingface.co/meta-llama/Meta-Llama-3-8B) at huggingface official sites.
 Then, download the provided LoRA weights (runs_dir) [here](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing).
 
 ## Compare with Previos Methods 
