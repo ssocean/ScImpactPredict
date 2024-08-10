@@ -1,85 +1,33 @@
-import pandas as pd
-
-from tools.test import get_filename_without_extension
-import copy
-import json
-import os
-from urllib.error import URLError
-
-import requests
-import tiktoken
-from bs4 import BeautifulSoup
-from langchain_core.exceptions import OutputParserException
-
 def get_filename_without_extension(file_path):
     # Extract the filename without extension
     filename_without_extension = os.path.splitext(os.path.basename(file_path))[0]
     return filename_without_extension
 
 
-import pandas as pd
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from tqdm import tqdm
-
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm import declarative_base
-
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-from pydantic import BaseModel, Field
-
-from typing import Dict, List
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-import langchain
-
-from langchain.chains import LLMChain
-
-import os
-
-from langchain.prompts import PromptTemplate
-
-from langchain.chains.question_answering import load_qa_chain
-
-
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import langchain
+from langchain.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
+from tqdm import tqdm
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
-from langchain_text_splitters import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from retry import retry
 
 langchain.debug = False
-import arxiv
 
 import time
 
 import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
-import glob
 
-from langchain_community.document_loaders import PDFMinerLoader
 from langchain_community.chat_models import ChatOpenAI
 
 from database.DBEntity import *
-from furnace.arxiv_paper import Arxiv_paper, get_arxiv_id_from_url
-from sqlalchemy import create_engine, and_
-from sqlalchemy.orm import sessionmaker, scoped_session
-import logging
-import datetime
 
-engine = create_engine('xxx/scitepredict')
-
-Base = declarative_base()
- 
-Base.metadata.create_all(engine)
-
- 
-Session = sessionmaker(bind=engine)
-session = Session()
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-session_factory = scoped_session(SessionLocal)   
-import PyPDF2
 items = [
     "Engaging", "Controversial", "Rigorous", "Innovative", "Accessible", "Methodical", "Concise", "Persuasive",
     "Comprehensive", "Insightful", "Relevant", "Objective", "Replicable", "Structured", "Coherent", "Original",
@@ -91,11 +39,19 @@ items = [
     "Speculation-driven", "Unethical", "Easy to understand", "Dull", "Well written", "Empirical", "Circumlocutory"
 ]
 
+class GPT_Paper_Response_Fixer(BaseModel):
+    IMPACT: float = Field(
+        description="The predicted acadmic impact value range from 0 to 1. Results are rounded to two decimal places. e.g., 0.46")
+
+
+lpqa_parser = PydanticOutputParser(pydantic_object=GPT_Paper_Response_Fixer)
+
+
 def parse_scores(content):
-     
+    # 解析评分内容
     try:
         scores = [int(line.split()[1]) for line in content.split('\n')]
-         
+        # 计算均值
         mean_score = sum(scores) / len(scores)
         return mean_score
     except Exception as e:
@@ -103,7 +59,10 @@ def parse_scores(content):
         return 0
 
 def paper_rating(abstract):
-    # download_paper(row, out_dir=r'J:\arxiv')
+    '''
+    This is the original prompt used in the paper "Can ChatGPT be used to predict citation counts, readership, and social media interaction? An exploration among 2222 scientific abstracts"
+    Resulting poor performance with NDCG@20 below 0.1.
+    '''
 
     prompt = f"Please rate the following abstract on each of the 60 items from 0 = Not at all to 100 = Very much. Only provide the numbers. For example:\n\n"
     prompt += "1. 65\n2. 50\n3. 5\n4. 95\n5. …\n\n"
@@ -118,60 +77,95 @@ def paper_rating(abstract):
     return parse_scores(content)
 
 
-def main():
-     
-    data = pd.read_csv(r'xxx\NAID\NAID_test_extrainfo.csv')
 
-     
+
+
+
+def chat_qianfan(prompt):
+    import qianfan
+    # This is used to calculat 'LLaMA-3-generated' in Tab.2. You have to regist qianfan or try another LLM Inference API provider.
+    chat_comp = qianfan.ChatCompletion()
+
+    # 指定特定模型
+    resp = chat_comp.do(model="Meta-Llama-3-8B", messages=[{
+        "role": "user",
+        "content": prompt
+    }])
+
+    print(resp["body"])
+    return resp["body"].get('result')
+def paper_rating_improved(row):
+    title = row['title']
+    abstract = row['abstract']
+    prompt = f'''Based on the following information, predict the academic impact of this paper as a single number between 0 and 1. Output only the number, with no additional text:
+    Title: {title}
+    Abstract: {abstract}
+    ONLY output a single number representing the future academic impact between 0 and 1. e.g., 0.69'''
+
+    try:
+
+        impact = float(chat_qianfan(prompt))
+        time.sleep(0.5)
+    except Exception as e:
+        print(e)
+        return None
+
+    return impact
+
+def main():
+    # 读取数据
+    data = pd.read_csv(r'NAID\NAID_test_extrainfo.csv')
+
     scores = []
 
-     
-    with ThreadPoolExecutor(max_workers=10) as executor:   
-         
-        future_to_abstract = {executor.submit(paper_rating, abstract): abstract for abstract in data['abstract']}
 
-         
-        for future in tqdm(as_completed(future_to_abstract)):
+    with ThreadPoolExecutor(max_workers=1) as executor:  # 这里将线程数设置为10
+
+        futures = [executor.submit(paper_rating_improved, row) for _, row in data.iterrows()]
+
+
+        for future in tqdm(as_completed(futures)):
             score = future.result()
-            scores.append(score)
-     
-    data['average_score'] = scores
+            if score:
+                scores.append(score)
+            else:
+                scores.append(-1)
 
-     
+    data['average_score'] = scores
+    data = data[data['average_score'] >= 0]
+
     columns_to_save = ['id', 'cites', 'TNCSI', 'TNCSI_SP', 'abstract', 'average_score']
-    data[columns_to_save].to_csv(r'gpt_predict.csv', index=False)
+    data[columns_to_save].to_csv(r'gpt_predict_llama-3.csv', index=False)
 
 
 import pandas as pd
 from sklearn.metrics import ndcg_score
-import numpy as np
 
 
 def calculate_ndcg(file_path):
-    
+
     data = pd.read_csv(file_path)
 
-   
+
     if 'average_score' not in data.columns or 'cites' not in data.columns:
         return "The required columns are not in the dataframe."
 
-    
-    y_true = data['cites'].to_numpy()
+
+    y_true = data['TNCSI_SP'].to_numpy()
     y_score = data['average_score'].to_numpy()
 
     # Reshape data for ndcg calculation (1, -1) as ndcg expects at least 2D arrays
     y_true = y_true.reshape(1, -1)
     y_score = y_score.reshape(1, -1)
 
-   
+
     ndcg = ndcg_score(y_true, y_score,k=20)
 
     return ndcg
 
 
-
-
+#
 if __name__ == "__main__":
-    # main()
-    ndcg_value = calculate_ndcg('gpt_predict.csv')
+    main()
+    ndcg_value = calculate_ndcg('gpt_predict_improved.csv')
     print(f"The NDCG value is: {ndcg_value}")

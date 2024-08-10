@@ -47,3 +47,4 @@ official_runs/*
 official_runs*
 *.pt
 *.pth
+/.idea
