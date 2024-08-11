@@ -18,13 +18,13 @@ Base = declarative_base()
 
 
 
-# 创建数据库引擎
-engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/literaturedatabase')
+ 
+engine = create_engine('xxxliteraturedatabase')
 
-# 创建数据库表
+ 
 Base.metadata.create_all(engine)
 
-# 创建会话
+ 
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -41,18 +41,18 @@ def add_info_to_database(dir:str,session):
 
                 doc = PaperMapping(cur_paper)
 
-                # ... 设置其他属性
+                 
 
-                # 将对象添加到会话
+                 
                 session.add(doc)
 
-                # 提交更改以将对象持久化到数据库
+                 
                 session.commit()
             else:
                 print("No arXiv ID found.")
 
 
-    # 关闭会话
+     
     session.close()
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
@@ -71,10 +71,10 @@ def update_keyword(dir:str,session):
                 arxiv_id = '.'.join(title_parts[:2])
                 id = 'http://arxiv.org/abs/'+arxiv_id
 
-                # 创建会话工厂
+                 
 
 
-                # id_value = 1  # 指定的ID值
+                 
                 data = session.query(PaperMapping).filter(PaperMapping.id == id).first()
                 # print(data.idLiterature)
                 if data and data.gpt_keywords is None:
@@ -86,10 +86,10 @@ def update_keyword(dir:str,session):
                         print(data.title)
                         print(data.abstract)
                         return
-                    # print(','.join(kwd))  # 根据实际列名修改
+                     
                     # kwd=''
                     data.gpt_keywords = ','.join(kwd)
-                    # 提交更改
+                     
                     # print(','.join(kwd))
                     try:
                         if data.citation_count is None:
@@ -107,19 +107,19 @@ def update_keyword(dir:str,session):
                         return
                     #
                     session.commit()
-                    # print("数据更新成功")
+                     
                 else:
                     pass
-                    # print("未找到要更新的数据或该数据已存在无需更新")
-                # 输出查询结果
+                     
+                 
                 # for row in data:
 
 
-            # 关闭会话
+             
             session.close()
 
 
-    # 关闭会话
+     
     session.close()
 # update_keyword(r'D:\download_paper',session)
 def statistics_database(session):

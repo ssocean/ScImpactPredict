@@ -10,10 +10,10 @@ import functools
 
 
 def filter_url(url):
-    # 定义正则表达式模式，匹配除了指定字符集之外的所有字符
+     
     illegal_chars_pattern = r'[^A-Za-z0-9_.\-~\s]'
 
-    # 使用正则表达式删除非法字符
+     
     filtered_url = re.sub(illegal_chars_pattern, '', url)
 
     return filtered_url

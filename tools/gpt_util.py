@@ -12,8 +12,8 @@ from config.config import openai_key
 
 # openai.api_base = "https://api.chatanywhere.com.cn"
 # openai.api_key = openai_key
-API_SECRET_KEY = "sk-zk2ea3df5fd097682a92420d3062d3a9b6b65aa2841d938e"
-BASE_URL = "https://flag.smarttrot.com/v1/"
+API_SECRET_KEY = "xxx"
+BASE_URL = "xxx"
 os.environ["OPENAI_API_KEY"] = API_SECRET_KEY
 os.environ["OPENAI_API_BASE"] = BASE_URL
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage

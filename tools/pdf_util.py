@@ -116,7 +116,7 @@ def extract_keyword_from_pdf(fpth):
 #
 #     response = openai.ChatCompletion.create(
 #         model="gpt-3.5-turbo",
-#         # prompt需要用英语替换，少占用token。
+ 
 #         messages=messages,
 #     )
 #     result = ''
@@ -127,5 +127,5 @@ def extract_keyword_from_pdf(fpth):
 
 
 if __name__ == "__main__":
-    titles = get_subtitles(r'C:\Users\Ocean\Downloads\2208.00173.pdf')
+    titles = get_subtitles(r'~\Downloads\2208.00173.pdf')
     print(titles)

@@ -29,22 +29,22 @@ import re
 
 Base = declarative_base()
 out_dir = r"E:\download_paper"
-# 创建数据库引擎
-engine = create_engine('mysql+mysqlconnector://root:1q2w3e4r5t@localhost/literaturedatabase')
+ 
+engine = create_engine('xxxliteraturedatabase')
 
-# 创建数据库表
+ 
 Base.metadata.create_all(engine)
 
-# 创建会话
+ 
 Session = sessionmaker(bind=engine)
 session = Session()
 #
 
 def replace_invalid_characters(path):
-    # 定义不允许的字符正则表达式模式
+     
     pattern = r'[<>:"/\\|?*]'
 
-    # 使用下划线替换不允许的字符
+     
     new_path = re.sub(pattern, '_', path)
 
     return new_path
@@ -56,7 +56,7 @@ def auto_make_directory(dir_pth: str):
     :param dir_pth: 路径
     :return: bool
     '''
-    if os.path.exists(dir_pth):  ##目录存在，返回为真
+    if os.path.exists(dir_pth):   
         return True
     else:
         os.makedirs(dir_pth)
@@ -69,7 +69,7 @@ def init_logger(out_pth: str = 'logs'):
     :param out_pth: 输出路径，默认为调用文件的同级目录logs
     :return: 日志类实例对象
     '''
-    # 日志模块
+     
     logger = logging.getLogger(__name__)
     logger.setLevel(level=logging.INFO)
     auto_make_directory(out_pth)
@@ -78,17 +78,17 @@ def init_logger(out_pth: str = 'logs'):
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s # %(message)s')
     handler.setFormatter(formatter)
-    # 输出到控制台
+     
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
-    # 输出到日志
+     
     logger.addHandler(handler)
     logger.addHandler(console)
     '''
     logger = init_logger(r'r')
-    logger.info("Start print log") #一般信息
-    logger.debug("Do something") #调试显示
-    logger.warning("Something maybe fail.")#警告
+    logger.info("Start print log")  
+    logger.debug("Do something")  
+    logger.warning("Something maybe fail.") 
     logger.info("'key':'value'")
     '''
     return logger
@@ -128,7 +128,7 @@ def redownload(session):
             id = get_arxiv_id_from_url(pub_url)
 
             file_pth = os.path.join(out_dir, id + '.' + row.title + '.pdf')
-            # 获取搜索结果
+             
 
             # print(file_pth)
             if not file_exists_case_insensitive(id, row.title,
@@ -222,8 +222,8 @@ def main(session):
                             error_list.append(result._get_default_filename())
 
                     doc = PaperMapping(arxiv_paper=arxiv_paper, search_by_keywords=query)
-                    # # ... 设置其他属性
-                    # # 将对象添加到会话
+                     
+                     
                     session.add(doc)
                     session.commit()
 
@@ -239,11 +239,11 @@ def main(session):
 
                 # print(str(i) + ' ' + result._get_default_filename())
 
-                # 提交更改以将对象持久化到数据库
+                 
 
     session.close()
     print(key_words_count)
-    # 将字典保存为JSON文件
+     
     import json
     with open("kwd_couont.json", "w") as json_file:
         json.dump(key_words_count, json_file)

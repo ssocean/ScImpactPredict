@@ -27,14 +27,14 @@ torch.manual_seed(seed)
 np.random.seed(seed)
 random.seed(seed)
 
-# 设置 cuDNN 确定性和禁用自动优化
+
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 def save_args_to_json(args, file_path):
-    # 将 args 对象转换为字典
+
     args_dict = vars(args)
-    # 将字典保存到 JSON 文件
+
     with open(file_path, 'w') as f:
         json.dump(args_dict, f, indent=4)
 def get_args():
@@ -45,8 +45,8 @@ def get_args():
     parser.add_argument('--batch_size', type=int, default=20, help='Batch size for training and validation')
 
 
-    parser.add_argument('--data_path', type=str, default='/home/u1120220285/ScitePredict/data/Data_TNCSI_S_OA_AuthorCite_8242_fix1.csv', help='Path to the dataset CSV file')
-    parser.add_argument('--checkpoint', type=str, default='/home/u1120220285/llama3_weight', help='Model checkpoint path')
+    parser.add_argument('--data_path', type=str, default='ScImpactPredict/data/Data_TNCSI_S_OA_AuthorCite_8242_fix1.csv', help='Path to the dataset CSV file')
+    parser.add_argument('--checkpoint', type=str, default='llama3_weight', help='Model checkpoint path')
     parser.add_argument('--weight_dir', type=str, default='runs/Jul12_14-54-26_gpu22', help='Model checkpoint path')
     parser.add_argument('--loss_func', type=str, default='bce',choices=['bce','mse','l1'])
     parser.add_argument('--prompt_style', type=int,default=0)
@@ -66,11 +66,8 @@ def get_args():
     parser.add_argument('--lora_bias', type=str, default='none', help='Bias mode for LoRA layers')
     parser.add_argument('--target_modules', type=str, default='q_proj,v_proj', help='Comma-separated list of transformer modules to apply LoRA')
     
-    
-    
-    # 默认 TensorBoard 日志目录使用当前日期和时间
     default_tb_dir = datetime.now().strftime("%m-%d-%H-%M")
-    parser.add_argument('--runs_dir', type=str, default=os.path.join('/home/u1120220285/ScitePredict/inference',default_tb_dir), help='Directory for storing TensorBoard logs')
+    parser.add_argument('--runs_dir', type=str, default=os.path.join('ScImpactPredict/inference',default_tb_dir), help='Directory for storing TensorBoard logs')
 
     return parser.parse_args()
 
@@ -133,7 +130,7 @@ tokenizer.pad_token = tokenizer.eos_token
 device_map={'':torch.cuda.current_device()}
 
 
-model = AutoPeftModelForSequenceClassification.from_pretrained(args.weight_dir, num_labels=args.num_labels, load_in_8bit=args.load_in_8bit,device_map=device_map,)# 不改变score 权重
+model = AutoPeftModelForSequenceClassification.from_pretrained(args.weight_dir, num_labels=args.num_labels, load_in_8bit=args.load_in_8bit,device_map=device_map,) 
 model.config.pad_token_id = model.config.eos_token_id
 model.loss_func = args.loss_func
 
