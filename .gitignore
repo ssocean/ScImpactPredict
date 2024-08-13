@@ -48,3 +48,4 @@ official_runs*
 *.pt
 *.pth
 /.idea
+prune.py
