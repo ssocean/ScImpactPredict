@@ -95,6 +95,6 @@ First, apply and download the LLaMA-3 pretrain [weights](https://huggingface.co/
 Then, download the provided LoRA weights (runs_dir) [here](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing).
 
 ## Compare with Previous Methods 
-With a few adjustments based on your specific needs, it should work fine. Since these models train very quickly (less than a few minutes on a single RTX 3080), we won’t be providing the trained models.
+With a few adjustments based on your specific needs, it should work fine. Since these models train very quickly (less than a few minutes on a single RTX 3080), we won’t be providing the trained weights.
 
 ### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper within an acceptable margin.
