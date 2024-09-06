@@ -18,15 +18,15 @@
 
 This repository contains the official implementation for the paper **"From Words to Worth: Newborn Article Impact Prediction with LLM"**. The tool is designed to PEFT the LLMs for the prediction of the future impact.
 
-## Installation
-At this Early Access stage，installation could be a little bit complicated. Sorry for any inconvenience.
+## Pre-finetuning Guidance (Skip if you only want to perform the inference.)
+The procedures could be a little bit complicated for training the LLMs.
 
-First, you need pull the repo and type following commands in the console:
+First, you need to pull the repo and type the following commands in the console:
 ```
 cd ScImpactPredict
 pip install -r requirements.txt
 ```
-Second, you have to manully modify the 'xxxForSequenceClassification' in the `transformers` package.
+Second, you have to manually modify the 'xxxForSequenceClassification' in the `transformers` package.
 ```
 class LlamaForSequenceClassification(LlamaPreTrainedModel):
     def __init__(self, config):
@@ -62,8 +62,8 @@ class LlamaForSequenceClassification(LlamaPreTrainedModel):
                 loss_fct = nn.SmoothL1Loss()
         
 ```
-## Fine-tuning
-Prepare `train.sh` bash file like below:
+## Fine-tuning (Skip if you only want to perform the inference.)
+Prepare `train.sh` bash file like the below:
 ```
 DATA_PATH="ScImpactPredict/NAID/NAID_train_extrainfo.csv"
 TEST_DATA_PATH="ScImpactPredict/NAID/NAID_test_extrainfo.csv"
@@ -76,7 +76,7 @@ OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
     --runs_dir ScImpactPredict/official_runs/LLAMA3 \
     --checkpoint  path_to_huggingface_LLaMA3
 ```
-Then, type `sh train.sh` in the console. Wating for the training ends~
+Then, type `sh train.sh` in the console. Waiting for the training ends~
 
 ## Testing (batch)
 Similar to Fine-tuning, prepare `test.sh` as below:
@@ -88,13 +88,13 @@ python inference.py \
 Then, type `sh test.sh`.
 
 ## Testing (single article)
-Just modified the `single_pred.py` file, then type `python single_pred.py`.
+Just modify the `single_pred.py` file, then type `python single_pred.py`. (If you haven't modified the code as instructed in the pre-finetuning guidance, apply a Sigmoid function to the inference results.)
 
 ## Model Weights
 First, apply and download the LLaMA-3 pretrain [weights](https://huggingface.co/meta-llama/Meta-Llama-3-8B) at huggingface official sites.
 Then, download the provided LoRA weights (runs_dir) [here](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing).
 
-## Compare with Previos Methods 
-With a few adjustments based on your specific needs, it should work fine. Since these models train very quickly (less than few minutes on a single RTX 3080), we won’t be providing the trained models.
+## Compare with Previous Methods 
+With a few adjustments based on your specific needs, it should work fine. Since these models train very quickly (less than a few minutes on a single RTX 3080), we won’t be providing the trained models.
 
-### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper within acceptable margin.
+### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper within an acceptable margin.
