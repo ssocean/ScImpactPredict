@@ -4,15 +4,7 @@ import torch.nn as nn
 from peft import AutoPeftModelForSequenceClassification
 from transformers import AutoTokenizer
 
-
-
-
-
-
-
-
-
-model_pth = r"xxx" # Warning, you have to modify the "base_model_name_or_path" in adapter_config.json. We will fix this error after the rebuttal.
+model_pth = r"path_to_the_weights_dir" # Warning, you have to modify the "base_model_name_or_path" in adapter_config.json. We will fix this error after the rebuttal.
 model = AutoPeftModelForSequenceClassification.from_pretrained(model_pth,num_labels=1, load_in_8bit=True,)
 tokenizer = AutoTokenizer.from_pretrained(model_pth)
 
