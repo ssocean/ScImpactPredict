@@ -16,7 +16,7 @@
 
 ## Introduction
 
-This repository contains the official implementation for the [paper](https://sway.cloud.microsoft/KOH09sPR21Ubojbc) **"From Words to Worth: Newborn Article Impact Prediction with LLM"**. The tool is designed to PEFT the LLMs for the prediction of the future impact.
+This repository contains the official implementation for the paper [**"From Words to Worth: Newborn Article Impact Prediction with LLM"**](https://sway.cloud.microsoft/KOH09sPR21Ubojbc). The tool is designed to PEFT the LLMs for the prediction of the future impact.
 
 ## Quick Try (for most researchers )
 First, pull the repo and type following commands in the console:
