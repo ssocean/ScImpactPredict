@@ -25,7 +25,7 @@ cd ScImpactPredict
 pip install -r requirements.txt
 ```
 
-To begin with LLaMA3, you should request access and download the LLaMA-3 pretrain [weights](https://huggingface.co/meta-llama/Meta-Llama-3-8B) at huggingface official sites.
+To begin with default setting, you should request access and download the LLaMA-3 pretrain [weights](https://huggingface.co/meta-llama/Meta-Llama-3-8B) at huggingface official sites.
 Then, download the provided LLaMA-3 LoRA weights (runs_dir) [here](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing).
 
 Finally, modify the path to the model's weights in the `single_pred.py` file, and type `python single_pred.py` in the console.
