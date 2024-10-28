@@ -18,7 +18,7 @@
 
 This repository contains the official implementation for the paper [**"From Words to Worth: Newborn Article Impact Prediction with LLM"**](https://sway.cloud.microsoft/KOH09sPR21Ubojbc). The tool is designed to PEFT the LLMs for the prediction of the future impact.
 
-## Quick Try (for most researchers )
+## Quick Try (for most researchers)
 First, pull the repo and type following commands in the console:
 ```
 cd ScImpactPredict
@@ -32,7 +32,7 @@ Finally, modify the path to the model's weights in the `single_pred.py` file, an
 
 
 
-## Fine-tuning (to reproduce or further improve the performance)
+## Fine-tuning (to reproduce, optional)
 
 For fine-tuning, you may manually modify the 'xxxForSequenceClassification' in the `transformers` package. Or follow the [instruction](https://huggingface.co/docs/transformers/v4.27.1/en/custom_models#using-a-model-with-custom-code) to trust remote code.
 ```
@@ -82,7 +82,7 @@ OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
 ```
 Finally, type `sh train.sh` in the console. Wating for the training ends~
 
-## Testing
+## Testing (to reproduce, optional)
 Similar to fine-tuning, prepare `test.sh` as below:
 ```
 python inference.py \
