@@ -28,44 +28,13 @@ pip install -r requirements.txt
 To begin with default setting, you should request access and download the LLaMA-3 pretrain [weights](https://huggingface.co/abacusai/Llama-3-Smaug-8B) at huggingface official sites.
 Then, download the provided LLaMA-3 LoRA weights (runs_dir) [here](https://drive.google.com/file/d/1YLtKjgATqAs4rApG2UzvZLRpvDGS4sse/view?usp=sharing).
 
-Finally, modify the path to the model's weights in the `single_pred.py` file, and type `python single_pred.py` in the console.
+After that, modify the path to the model's weights in the `single_pred.py` file, and type `python single_pred.py` in the console.
 
 
 
 ## Fine-tuning (to reproduce, optional)
 
-For fine-tuning, you may manually modify the 'xxxForSequenceClassification' in the `transformers` package. Or follow the [instruction](https://huggingface.co/docs/transformers/v4.27.1/en/custom_models#using-a-model-with-custom-code) to trust remote code.
-```
-class LlamaForSequenceClassification(LlamaPreTrainedModel):
-    def __init__(self, config):
-        super().__init__(config)
-        ...
-        self.post_init()
-        # Add codes here!
-        self.loss_func = 'mse'
-        self.sigmoid = nn.Sigmoid()
-        ...
-    def forward(...):
-        ...
-        logits = self.score(hidden_states)
-        # Add codes here!
-        if not self.loss_func == 'bce':
-            logits = self.sigmoid(logits)
-        if input_ids is not None:
-            batch_size = input_ids.shape[0]
-        ...
-        # Add codes here!
-        if self.config.problem_type == "regression":
-            if self.loss_func == 'bce':
-                loss_fct = BCEWithLogitsLoss()
-            elif self.loss_func == 'mse':
-                loss_fct = MSELoss()
-            elif self.loss_func == 'l1':
-                loss_fct = L1Loss()
-            elif self.loss_func == 'smoothl1':
-                loss_fct = nn.SmoothL1Loss()
-        
-```
+For fine-tuning, you may manually modify the 'xxxForSequenceClassification' in the `transformers` package (see llama_for_naip/NAIP_LLaMA.py for more details). Or follow the [instruction](https://huggingface.co/docs/transformers/v4.27.1/en/custom_models#using-a-model-with-custom-code) to use custom code.
 
 Then, prepare `train.sh` bash file like below:
 ```
@@ -77,7 +46,7 @@ OMP_NUM_THREADS=1 accelerate launch offcial_train.py \
     --learning_rate 1e-4 \
     --data_path $DATA_PATH \
     --test_data_path $TEST_DATA_PATH \
-    --runs_dir ScImpactPredict/official_runs/LLAMA3 \
+    --runs_dir official_runs/LLAMA3 \
     --checkpoint  path_to_huggingface_LLaMA3
 ```
 Finally, type `sh train.sh` in the console. Wating for the training ends~
