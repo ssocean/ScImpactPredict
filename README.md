@@ -1,4 +1,4 @@
-# From Words to Worth: Newborn Article Impact Prediction with LLM
+# [From Words to Worth: Newborn Article Impact Prediction with LLM](https://arxiv.org/abs/2408.03934?context=cs.CL)
 
 
 <p align="center">
@@ -6,11 +6,24 @@
 </p>
 
 <h1 align="center">
-  LLM as Article Impact Predictor
+  Using LLM as Academic Article Impact Predictor
 </h1>
 
-### [Early Access Version]
-###### This [paper](https://arxiv.org/abs/2408.03934?context=cs.CL) is currently under peer review. The code might change frequently. We are currently experiencing a severe staff shortage. If you encounter any issues during the replication process, please feel free to contact us through an issue or via email：oceanytech@gmail.com.
+## 🚀 **Update Log** 
+- **240808 - Eerly Access**   
+  - We have released the Early Access version of our code！
+- **241126 - V1.0**  We’re thrilled to announce the end of Early Access and the official release of V1.0! ✨
+  - The codebase is now more organized and easier to navigate! 🧹  
+  - Updated and streamlined README with detailed instructions for setup and usage. 💡
+  - Decoupling the dataset, more LoRa adapters weight download links, and more! 🔄  
+  - Known Issues: The functionality for building the NAID dataset has not been tested on other machines, which may lead to potential issues. We plan to replace this function with a more powerful framefowk in our [another codebase](https://github.com/ssocean/PyBiblion).
+
+
+
+
+[//]: # (### [Early Access Version])
+
+[//]: # (###### This [paper]&#40;https://arxiv.org/abs/2408.03934?context=cs.CL&#41; is currently under peer review. The code might change frequently. We are currently experiencing a severe staff shortage. If you encounter any issues during the replication process, please feel free to contact us through an issue or via email：oceanytech@gmail.com.)
 
 <!-- If you have any issues, feel free to reach out via Email: oceanytech@gmail.com or open an issue in the repository. -->
 
@@ -80,3 +93,15 @@ With a few adjustments based on your specific needs, it should work fine. Since 
 Folders like furnace, database, and tools are used for building the NAID and TKPD datasets. They have no direct connection to training or inference.
 
 ### We are pretty confident in our methodology and experiments, and you should be able to achieve any of the performance reported in our paper within an acceptable margin.
+
+## BibTex
+```
+@article{Zhao2024NAIP,
+  title={From Words to Worth: Newborn Article Impact Prediction with LLM},
+  author={Penghai Zhao and Qinghua Xing and Kairan Dou and Jinyu Tian and Ying Tai and Jian Yang and Ming-Ming Cheng and Xiang Li},
+  journal={ArXiv},
+  year={2024},
+  volume={abs/2408.03934},
+  url={https://api.semanticscholar.org/CorpusID:271744831}
+}
+```
