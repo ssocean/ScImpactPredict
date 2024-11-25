@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 import torch
 
 
-# Warning, you may have to modify the "base_model_name_or_path" in adapter_config.json. 
+# Warning, you may have to modify the "base_model_name_or_path" in adapter_config.json.
 model_pth = r"path_to_the_weights_dir"
 model = AutoPeftModelForSequenceClassification.from_pretrained(model_pth,num_labels=1, load_in_8bit=True,)
 tokenizer = AutoTokenizer.from_pretrained(model_pth)

@@ -28,7 +28,7 @@ pip install -r requirements.txt
 To begin with default setting, you should request access and download the LLaMA-3 pretrain [weights](https://huggingface.co/abacusai/Llama-3-Smaug-8B) at huggingface official sites.
 Then, download the provided LLaMA-3 LoRA weights (runs_dir) [here](https://drive.google.com/file/d/1YLtKjgATqAs4rApG2UzvZLRpvDGS4sse/view?usp=sharing).
 
-After that, modify the path to the model's weights in the `single_pred.py` file, and type `python single_pred.py` in the console.
+After that, modify the path to the model's weights in the `demo.py` file, and type `python demo.py` in the console.
 
 
 
