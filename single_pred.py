@@ -24,7 +24,7 @@ while True:
     inputs = tokenizer(text, return_tensors="pt")
     outputs = model(input_ids=inputs["input_ids"].to("cuda"))
 
-    
+
     # If you haven't modify the LLaMA code.
     print(nn.Sigmoid()(outputs['logits']))
     # Else print(outputs['logits'])
