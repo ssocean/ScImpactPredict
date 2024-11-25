@@ -25,8 +25,8 @@ cd ScImpactPredict
 pip install -r requirements.txt
 ```
 
-To begin with default setting, you should request access and download the LLaMA-3 pretrain [weights](https://huggingface.co/meta-llama/Meta-Llama-3-8B) at huggingface official sites.
-Then, download the provided LLaMA-3 LoRA weights (runs_dir) [here](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing).
+To begin with default setting, you should request access and download the LLaMA-3 pretrain [weights](https://huggingface.co/abacusai/Llama-3-Smaug-8B) at huggingface official sites.
+Then, download the provided LLaMA-3 LoRA weights (runs_dir) [here](https://drive.google.com/file/d/1YLtKjgATqAs4rApG2UzvZLRpvDGS4sse/view?usp=sharing).
 
 Finally, modify the path to the model's weights in the `single_pred.py` file, and type `python single_pred.py` in the console.
 
@@ -98,10 +98,10 @@ We also offer the weights of other models for download.
 
 | LLMs    | Size | MAE   | NDCG  | Mem    | Download Link                                                                                  |
 | ------- | ---- | ----- | ----- | ------ | ---------------------------------------------------------------------------------------------- |
-| Phi-3   | 3.8B | 0.226 | 0.742 | 6.2GB  | [Download](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing) |
-| Falcon  | 7B   | 0.231 | 0.740 | 8.9GB  | [Download](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing) |
-| Qwen-2  | 7B   | 0.223 | 0.774 | 12.6GB | [Download](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing) |
-| Mistral | 7B   | 0.220 | 0.850 | 15.4GB | [Download](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing) |
+| Phi-3   | 3.8B | 0.226 | 0.742 | 6.2GB  | [Download](https://drive.google.com/file/d/1OtZx8L6nyvLav4KYacvfGdG40pCPhn9a/view?usp=sharing) |
+| Falcon  | 7B   | 0.231 | 0.740 | 8.9GB  | [Download](https://drive.google.com/file/d/18JGDvHLXDpsQyawIEVvJ_08HhBs-boMt/view?usp=sharing) |
+| Qwen-2  | 7B   | 0.223 | 0.774 | 12.6GB | [Download](https://drive.google.com/file/d/1kq9xckxGqjJAnhtLla--vs_0yozJcvI4/view?usp=sharing) |
+| Mistral | 7B   | 0.220 | 0.850 | 15.4GB | [Download](https://drive.google.com/file/d/1Rgx-_yLfXt7jTVEmdql6xSZk8vhzmBCV/view?usp=sharing) |
 | Llama-3 | 8B   | 0.216 | 0.901 | 9.4GB  | [Download](https://drive.google.com/file/d/13-ugXsm35AuzOBUlL6jPacY_z8qVIb7x/view?usp=sharing) |
 
 ## Compare with Previous Methods 
