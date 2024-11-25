@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 import torch
 
 
-# Warning, you have to modify the "base_model_name_or_path" in adapter_config.json. We will fix this error after the rebuttal.
+# Warning, you may have to modify the "base_model_name_or_path" in adapter_config.json. 
 model_pth = r"path_to_the_weights_dir"
 model = AutoPeftModelForSequenceClassification.from_pretrained(model_pth,num_labels=1, load_in_8bit=True,)
 tokenizer = AutoTokenizer.from_pretrained(model_pth)
@@ -25,8 +25,9 @@ while True:
     outputs = model(input_ids=inputs["input_ids"].to("cuda"))
 
 
-    # If you haven't modify the LLaMA code.
+    # If you haven't modify the LLaMA code. (For most users)
     print(nn.Sigmoid()(outputs['logits']))
+
     # Else print(outputs['logits'])
 
 
