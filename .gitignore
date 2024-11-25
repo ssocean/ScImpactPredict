@@ -50,3 +50,5 @@ official_runs*
 /.idea
 prune.py
 /.idea
+local_test/test.py
+/local_test
