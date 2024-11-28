@@ -61,6 +61,9 @@ class LlamaForSequenceClassification(LlamaPreTrainedModel):
         )
         hidden_states = transformer_outputs[0]
         logits = self.score(hidden_states)
+        # modify here
+        logits = self.sigmoid(logits)
+
 
         if input_ids is not None:
             batch_size = input_ids.shape[0]
