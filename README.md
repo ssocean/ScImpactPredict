@@ -18,7 +18,7 @@
   - Decoupling the dataset, more LoRa adapters weight download links, and more! 🔄  
   - Known Issues: The functionality for building the NAID dataset has not been tested on other machines, which may lead to potential issues. We plan to replace this function with a more powerful framefowk in our [another codebase](https://github.com/ssocean/PyBiblion).
 - **241204 - Huggingface Spaces Support🥰** [(Click Here for Free Online Demo)](https://huggingface.co/spaces/ssocean/Newborn_Article_Impact_Predict)
-  - We've set up an online demo on Hugging Face Spaces—now you can easily give it a try without writing a single line of code! (You might need to wait a few minutes for the Space to resume from its paused state.)
+  - We've set up an online demo on Hugging Face Spaces—now you can easily give it a try without writing a single line of code!
 
 
 
